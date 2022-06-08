@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/dibrinsofor/mlsa3/handlers"
 	"github.com/gin-gonic/gin"
 )
@@ -17,5 +19,10 @@ func SetupServer() *gin.Engine {
 func main() {
 	r := SetupServer()
 
-	r.Run(":6969")
+	port := os.Getenv("HTTP_PLATFORM_PORT")
+	if port == "" {
+		port = "6969"
+	}
+
+	r.Run("127.0.0.1:" + port)
 }
