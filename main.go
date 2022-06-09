@@ -12,6 +12,7 @@ func SetupServer() *gin.Engine {
 
 	r.GET("/health", handlers.HealthCheck())
 	r.POST("/createUser", handlers.CreateUser)
+	r.GET("/", handlers.VerifyUser)
 
 	return r
 }

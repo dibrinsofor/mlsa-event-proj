@@ -3,38 +3,14 @@ package handlers
 import (
 	"log"
 	"net/http"
-	"os"
 	"time"
 
+	"github.com/dibrinsofor/mlsa3/middlewares"
 	"github.com/dibrinsofor/mlsa3/models"
 	"github.com/dibrinsofor/mlsa3/redis"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt"
 	"github.com/lithammer/shortuuid/v4"
 )
-
-type JWTAuthDetails struct {
-	UserID string
-	jwt.StandardClaims
-}
-
-func GenerateJWT(user *models.User) (string, error) {
-	expiresAt := time.Now().Add(time.Hour * 24 * 7).Unix()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, JWTAuthDetails{
-		UserID: user.ID,
-		StandardClaims: jwt.StandardClaims{
-			Subject:   user.FirstName,
-			ExpiresAt: expiresAt,
-		},
-	})
-
-	tokenString, err := token.SignedString([]byte(os.Getenv("JWTOKENKEY")))
-	if err != nil {
-		log.Println(err)
-		return "", err
-	}
-	return tokenString, nil
-}
 
 func CreateUser(c *gin.Context) {
 	var newUser models.User
@@ -67,11 +43,12 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	token, err := GenerateJWT(&newUser)
+	token, err := middlewares.GenerateJWT(&newUser)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to generate jwt token"})
 		return
 	}
+	c.Request.Header.Set("Authorization", ("Bearer " + token))
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "user successfully created.",
