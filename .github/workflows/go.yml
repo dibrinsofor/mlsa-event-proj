@@ -26,4 +26,4 @@ jobs:
         app-name: mlsa3
         # Applies to Web App only: Path to package or folder. *.zip, *.war, *.jar or a folder to deploy
         package: build/
-        publish-profile: ${{ secrets.azureWebAppPublishProfile, secrets.AZURE_SERVICEBUS_HOSTNAME }}
+        publish-profile: ${{ secrets.azureWebAppPublishProfile }}
