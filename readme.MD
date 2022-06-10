@@ -1,6 +1,6 @@
 # mlsa event 3
 
-a quick user onboarding flow written in Go (Gin) to demonstrate some use cases for queueing systems in data intensive applications
+a tiny app written in Go (Gin) to demonstrate some use cases for queueing systems in data intensive applications.
 
 ## key features
 

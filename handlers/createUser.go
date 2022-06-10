@@ -7,6 +7,7 @@ import (
 
 	"github.com/dibrinsofor/mlsa3/middlewares"
 	"github.com/dibrinsofor/mlsa3/models"
+	"github.com/dibrinsofor/mlsa3/queues"
 	"github.com/dibrinsofor/mlsa3/redis"
 	"github.com/gin-gonic/gin"
 	"github.com/lithammer/shortuuid/v4"
@@ -15,7 +16,6 @@ import (
 func CreateUser(c *gin.Context) {
 	var newUser models.User
 
-	// check if jwt exists and redirect
 	// azure: https://www.youtube.com/watch?v=Te9bF01iqWM
 
 	err := c.BindJSON(&newUser)
@@ -36,6 +36,7 @@ func CreateUser(c *gin.Context) {
 
 	newUser.ID = shortuuid.New()
 	newUser.CreatedAt = time.Now()
+	queues.SendMessage(newUser.Email)
 
 	_, err = redis.AddUserInstance(&newUser)
 	if err != nil {
@@ -48,6 +49,8 @@ func CreateUser(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to generate jwt token"})
 		return
 	}
+
+	// TODO: remove this if Osinachi will handle frontend
 	c.Request.Header.Set("Authorization", ("Bearer " + token))
 
 	c.JSON(http.StatusOK, gin.H{

@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"log"
 
 	"github.com/dibrinsofor/mlsa3/models"
 	"github.com/go-redis/redis/v9"
@@ -35,4 +36,14 @@ func AddUserInstance(user *models.User) ([]redis.Cmder, error) {
 	}
 
 	return val, err
+}
+
+func FindUserByID(ID string) (userObject models.User) {
+	rdb := ConnectRedis()
+
+	if err := rdb.HGetAll(ctx, ID).Scan(&userObject); err != nil {
+		log.Println(err)
+	}
+
+	return userObject
 }
