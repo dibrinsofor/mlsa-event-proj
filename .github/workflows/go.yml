@@ -19,6 +19,12 @@ jobs:
     - name: Copy static template files
       run: xcopy /i templates build\templates
 
+    - name: Go get azidentity dependencies
+      run: go get github.com/Azure/azure-sdk-for-go/sdk/azidentity
+
+    - name: Go get azservicebus dependencies
+      run: go get github.com/Azure/azure-sdk-for-go/sdk/messaging/azservicebus
+
     - name: Build
       run: go build -o build/go-app.exe -v
 
