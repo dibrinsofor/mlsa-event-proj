@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"log"
 	"net/http"
 	"time"
 
@@ -18,27 +17,43 @@ func CreateUser(c *gin.Context) {
 
 	// azure: https://www.youtube.com/watch?v=Te9bF01iqWM
 
-	err := c.BindJSON(&newUser)
-	if err != nil {
-		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "failed to parse user request. check documentation.",
-		})
-		return
+	// err := c.BindJSON(&newUser)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	c.JSON(http.StatusBadRequest, gin.H{
+	// 		"message": "failed to parse user request. check documentation.",
+	// 	})
+	// 	return
+	// }
+
+	c.Request.ParseMultipartForm(1000)
+
+	// if newUser.Email == "" {
+	// 	c.JSON(http.StatusBadRequest, gin.H{
+	// 		"message": "must provide a valid email",
+	// 	})
+	// 	return
+	// }
+	email := c.PostForm("email")
+	if email != "" {
+		newUser.Email = email
 	}
 
-	if newUser.Email == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "must provide a valid email. field cannot be left empty.",
-		})
-		return
+	first := c.PostForm("first")
+	if first != "" {
+		newUser.FirstName = first
+	}
+
+	last := c.PostForm("last")
+	if last != "" {
+		newUser.LastName = last
 	}
 
 	newUser.ID = shortuuid.New()
 	newUser.CreatedAt = time.Now()
 	queues.SendMessage(newUser.Email)
 
-	_, err = redis.AddUserInstance(&newUser)
+	_, err := redis.AddUserInstance(&newUser)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to write user data."})
 		return
@@ -50,13 +65,18 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	// TODO: remove this if Osinachi will handle frontend
 	c.Request.Header.Set("Authorization", ("Bearer " + token))
 
-	c.JSON(http.StatusOK, gin.H{
-		"message": "user successfully created.",
-		"data":    newUser,
-		"token":   token,
+	c.HTML(http.StatusAccepted, "success.tmpl", gin.H{
+		"title":      "Message Queues Demo",
+		"subheading": "Account Successfully Created",
+		"first":      newUser.FirstName,
 	})
+
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"message": "user successfully created.",
+	// 	"data":    newUser,
+	// 	"token":   token,
+	// })
 
 }

@@ -11,8 +11,8 @@ type Location struct {
 type User struct {
 	ID        string    `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
-	FirstName string    `json:"first_name"`
-	LastName  string    `json:"last_name"`
-	Email     string    `json:"email"`
+	FirstName string    `json:"first_name" form:"first"`
+	LastName  string    `json:"last_name" form:"last"`
+	Email     string    `json:"email" form:"email"`
 	// Location  Location  `json:"location"`
 }
