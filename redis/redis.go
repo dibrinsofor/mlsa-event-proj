@@ -3,6 +3,7 @@ package redis
 import (
 	"context"
 	"log"
+	"os"
 
 	"github.com/dibrinsofor/mlsa3/models"
 	"github.com/go-redis/redis/v9"
@@ -11,9 +12,17 @@ import (
 var ctx = context.Background()
 
 func ConnectRedis() *redis.Client {
+	host := os.Getenv("REDIS_HOST")
+	if host == "" {
+		host = "127.0.0.1:6379"
+	}
+	pass := os.Getenv("REDIS_PASSWORD")
+	if pass == "" {
+		pass = "password"
+	}
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "127.0.0.1:6379",
-		Password: "password",
+		Addr:     host,
+		Password: pass,
 		DB:       0,
 	})
 
