@@ -2,32 +2,31 @@ package redis
 
 import (
 	"context"
+	"crypto/tls"
 	"log"
+	"os"
 
 	"github.com/dibrinsofor/mlsa3/models"
 	"github.com/go-redis/redis/v9"
 )
 
-var ctx = context.Background()
+var ctx = context.TODO()
 
 func ConnectRedis() *redis.Client {
-	// host := os.Getenv("REDIS_HOST")
-	// if host == "" {
-	// 	host = "127.0.0.1:6379"
-	// }
-	// pass := os.Getenv("REDIS_PASSWORD")
-	// if pass == "" {
-	// 	pass = "password"
-	// }
-	// rdb := redis.NewClient(&redis.Options{
-	// 	Addr:     host,
-	// 	Password: pass,
-	// 	DB:       0,
-	// })
+	host := os.Getenv("REDIS_HOST")
+	if host == "" {
+		host = "127.0.0.1:6379"
+	}
+	pass := os.Getenv("REDIS_PASSWORD")
+	if pass == "" {
+		pass = "password"
+	}
+	tlsConfig := &tls.Config{MinVersion: tls.VersionTLS12}
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "mlsa3.redis.cache.windows.net:6380",
-		Password: "elf7mgl7Tp9NNVaZADQOfIvDOCdQHtvUOAzCaBFGll8=elf7mgl7Tp9NNVaZADQOfIvDOCdQHtvUOAzCaBFGll8=",
-		DB:       0,
+		Addr:      host,
+		Password:  pass,
+		DB:        0,
+		TLSConfig: tlsConfig,
 	})
 
 	return rdb
@@ -48,6 +47,7 @@ func AddUserInstance(user *models.User) ([]redis.Cmder, error) {
 
 	}
 
+	defer rdb.Close()
 	return val, err
 }
 
@@ -58,5 +58,6 @@ func FindUserByID(ID string) (userObject models.User) {
 		log.Println(err)
 	}
 
+	defer rdb.Close()
 	return userObject
 }

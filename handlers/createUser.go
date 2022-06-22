@@ -6,7 +6,8 @@ import (
 
 	"github.com/dibrinsofor/mlsa3/middlewares"
 	"github.com/dibrinsofor/mlsa3/models"
-	"github.com/dibrinsofor/mlsa3/queues"
+
+	// "github.com/dibrinsofor/mlsa3/queues"
 	"github.com/dibrinsofor/mlsa3/redis"
 	"github.com/gin-gonic/gin"
 	"github.com/lithammer/shortuuid/v4"
@@ -51,7 +52,7 @@ func CreateUser(c *gin.Context) {
 
 	newUser.ID = shortuuid.New()
 	newUser.CreatedAt = time.Now()
-	queues.SendMessage(newUser.Email)
+	// queues.SendMessage(newUser.Email)
 
 	_, err := redis.AddUserInstance(&newUser)
 	if err != nil {
