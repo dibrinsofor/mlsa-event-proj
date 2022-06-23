@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/dibrinsofor/mlsa3/middlewares"
 	"github.com/dibrinsofor/mlsa3/models"
 
 	"github.com/dibrinsofor/mlsa3/queues"
@@ -60,13 +59,13 @@ func CreateUser(c *gin.Context) {
 	// 	return
 	// }
 
-	token, err := middlewares.GenerateJWT(&newUser)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to generate jwt token"})
-		return
-	}
+	// token, err := middlewares.GenerateJWT(&newUser)
+	// if err != nil {
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"message": "failed to generate jwt token"})
+	// 	return
+	// }
 
-	c.Request.Header.Set("Authorization", ("Bearer " + token))
+	// c.Request.Header.Set("Authorization", ("Bearer " + token))
 
 	c.HTML(http.StatusAccepted, "success.tmpl", gin.H{
 		"title":      "Message Queues Demo",
