@@ -13,7 +13,10 @@ func GetClient() *azservicebus.Client {
 	// 	panic("AZURE_SERVICEBUS_HOSTNAME environment variable not found")
 	// }
 
-	namespace := "Endpoint=sb://mlsa3queues.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=oEbjFXH6o+hLzyBjxRhkXg9JpAzWwRCyeYmziWZdCAI="
+	// add env_vars to config.yml: https://medium.com/@bnprashanth256/reading-configuration-files-and-environment-variables-in-go-golang-c2607f912b63
+	// https://www.loginradius.com/blog/engineering/environment-variables-in-golang/
+
+	namespace := "mlsa3queues.servicebus.windows.net"
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		panic(err)
