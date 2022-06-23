@@ -29,8 +29,8 @@ func GetClient() *azservicebus.Client {
 	return client
 }
 
-func SendMessage(message string) {
-	client := GetClient()
+func SendMessage(message string, client *azservicebus.Client) {
+	// client := GetClient()
 	sender, err := client.NewSender("mlsa3", nil)
 	if err != nil {
 		panic(err)
