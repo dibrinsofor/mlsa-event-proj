@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/dibrinsofor/mlsa3/middlewares"
-	"github.com/dibrinsofor/mlsa3/redis"
 	"github.com/gin-gonic/gin"
 )
 
@@ -35,10 +34,10 @@ func VerifyUser(c *gin.Context) {
 
 	c.Set("user_id", claims.UserID)
 
-	user := redis.FindUserByID(claims.UserID)
+	// user := redis.FindUserByID(claims.UserID)
 
-	c.JSON(http.StatusOK, gin.H{
-		"firstname": user.FirstName,
-	})
+	// c.JSON(http.StatusOK, gin.H{
+	// 	"firstname": user.FirstName,
+	// })
 
 }
