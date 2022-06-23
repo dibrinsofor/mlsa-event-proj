@@ -8,6 +8,7 @@ import (
 
 	"github.com/dibrinsofor/mlsa3/handlers"
 	"github.com/fsnotify/fsnotify"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -29,6 +30,12 @@ func SetupServer() *gin.Engine {
 
 func main() {
 	r := SetupServer()
+
+	corsConfig := cors.DefaultConfig()
+
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowCredentials = true
+	r.Use(cors.New(corsConfig))
 
 	r.LoadHTMLGlob("templates/*")
 
