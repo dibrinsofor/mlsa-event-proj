@@ -31,11 +31,11 @@ func GetClient() *azservicebus.Client {
 
 func SendMessage(message string) {
 	client := GetClient()
-	sender, err := client.NewSender("mlsa3onboardingqueue", nil)
+	sender, err := client.NewSender("mlsa3", nil)
 	if err != nil {
 		panic(err)
 	}
-	defer sender.Close(context.TODO())
+	// defer sender.Close(context.TODO())
 
 	sbMessage := &azservicebus.Message{
 		Body: []byte(message),
