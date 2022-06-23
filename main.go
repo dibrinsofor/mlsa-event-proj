@@ -15,6 +15,12 @@ import (
 func SetupServer() *gin.Engine {
 	r := gin.Default()
 
+	corsConfig := cors.DefaultConfig()
+
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowCredentials = true
+	r.Use(cors.New(corsConfig))
+
 	r.GET("/health", handlers.HealthCheck())
 	r.POST("/createUser", handlers.CreateUser)
 	// r.GET("/", handlers.VerifyUser)
@@ -30,12 +36,6 @@ func SetupServer() *gin.Engine {
 
 func main() {
 	r := SetupServer()
-
-	corsConfig := cors.DefaultConfig()
-
-	corsConfig.AllowAllOrigins = true
-	corsConfig.AllowCredentials = true
-	r.Use(cors.New(corsConfig))
 
 	r.LoadHTMLGlob("templates/*")
 
